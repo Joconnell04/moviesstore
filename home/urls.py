@@ -1,16 +1,6 @@
 from django.urls import path
-from . import views, include
+from . import views
 urlpatterns = [
     path('', views.index, name='home.index'),
-    path('', include('home.urls')),
+    path('about', views.about, name='home.about'),
 ]
-
-###
-"""
-from django.contrib import admin
-from django.urls import path, include
-urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('', include('home.urls')),
-]
-"""
