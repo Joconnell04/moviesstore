@@ -38,7 +38,10 @@
 <script>
   (function () {
     const qp = new URLSearchParams(window.location.search);
-    const shouldOpen = qp.get('feedback') === '1' || {{ template_data.show_feedback_modal|yesno:"true,false" }};
+    const fromQuery = qp.get('feedback') === '1';
+    const fromTemplate = {{ template_data.show_feedback_modal|yesno:"true,false" }};
+    const shouldOpen = fromQuery || fromTemplate;
+
     if (shouldOpen) {
       const dlg = document.getElementById('feedbackModal');
       if (dlg && typeof dlg.showModal === 'function') dlg.showModal();
