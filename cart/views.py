@@ -28,6 +28,7 @@ def purchase(request):
     template_data = {}
     template_data['title'] = 'Purchase confirmation'
     template_data['order_id'] = order.id
+    template_data['show_feedback_modal'] = True
     return render(request, 'cart/purchase.html',{'template_data': template_data})
 
 def index(request):

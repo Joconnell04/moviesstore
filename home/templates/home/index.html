@@ -16,32 +16,3 @@
   </div>
 </div>
 {% endblock content %}
-
-<dialog id="feedbackModal">
-  <form method="post" action="{% url 'home.feedback_submit' %}">
-    {% csrf_token %}
-    <h2>How was checkout?</h2>
-    <p><em>Optional:</em> Leave a short statement so we can improve.</p>
-
-    <label>Name (optional)</label>
-    <input type="text" name="name" maxlength="80" style="width:100%; margin-bottom:.5rem;">
-
-    <label>Your thoughts (required)</label>
-    <textarea name="message" maxlength="500" rows="4" style="width:100%;" required></textarea>
-
-    <div style="margin-top:1rem; display:flex; gap:.5rem;">
-      <button type="submit">Submit</button>
-      <button type="button" onclick="document.getElementById('feedbackModal').close()">Cancel</button>
-    </div>
-  </form>
-</dialog>
-
-<script>
-  (function () {
-    const qp = new URLSearchParams(window.location.search);
-    if (qp.get('feedback') === '1') {
-      const dlg = document.getElementById('feedbackModal');
-      if (dlg && typeof dlg.showModal === 'function') dlg.showModal();
-    }
-  })();
-</script>
