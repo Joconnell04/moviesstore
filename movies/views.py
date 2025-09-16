@@ -26,6 +26,13 @@ def show(request, id):
     template_data['reviews'] = reviews
     return render(request, 'movies/show.html',{'template_data': template_data})
 
+def top_comments(request):
+    reviews = Review.objects.all().order_by('-date')[:10]
+    template_data = {}
+    template_data['title'] = 'Top Comments'
+    template_data['reviews'] = reviews
+    return render(request, 'movies/top_comments.html',{'template_data': template_data})
+
 @login_required
 def create_review(request, id):
     if request.method == 'POST' and request.POST['comment']!= '':
