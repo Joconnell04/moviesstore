@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}{{ template_data.title }}{% endblock %}
+
+{% block content %}
+<h1>{{ template_data.title }}</h1>
+
+{% if messages %}
+  <ul style="list-style:none; padding:0;">
+    {% for m in messages %}
+      <li style="margin:.5rem 0;">{{ m }}</li>
+    {% endfor %}
+  </ul>
+{% endif %}
+
+{% if template_data.items %}
+  <ul style="list-style:none; padding:0;">
+    {% for fb in template_data.items %}
+      <li style="padding:.75rem 0; border-bottom:1px solid #ddd;">
+        <div style="font-weight:600;">{{ fb.message }}</div>
+        <div style="font-size:.9rem; color:#555;">
+          — {{ fb.name|default:"Anonymous" }} · {{ fb.created|date:"Y-m-d H:i" }}
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>No feedback yet.</p>
+{% endif %}
+{% endblock %}
