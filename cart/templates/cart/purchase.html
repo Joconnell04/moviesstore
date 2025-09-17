@@ -39,7 +39,7 @@
   (function () {
     const qp = new URLSearchParams(window.location.search);
     const fromQuery = qp.get('feedback') === '1';
-    const fromTemplate = {{ template_data.show_feedback_modal|yesno:"true,false" }};
+    const fromTemplate = "{{ template_data.show_feedback_modal|yesno:'true,false' }}";
     const shouldOpen = fromQuery || fromTemplate;
 
     if (shouldOpen) {
