@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2 class="mb-0">{{ petition.title }}</h2>
+                        <span class="badge bg-success fs-4">{{ petition.yes_vote_count }} YES</span>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4">
+                        <h5 class="text-muted">Proposed Movie</h5>
+                        <h3>{{ petition.proposed_movie_title }}</h3>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="text-muted">Reason</h5>
+                        <p class="lead">{{ petition.reason }}</p>
+                    </div>
+
+                    <div class="mb-4">
+                        <p class="text-muted">
+                            <i class="fas fa-user"></i> Created by <strong>{{ petition.created_by.username }}</strong> on {{ petition.created_at|date:"F d, Y" }} at {{ petition.created_at|time:"g:i A" }}
+                        </p>
+                    </div>
+
+                    <hr>
+
+                    <div class="d-flex justify-content-between align-items-center mt-4">
+                        <a href="{% url 'petitions:list' %}" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left"></i> Back to Petitions
+                        </a>
+
+                        {% if user.is_authenticated %}
+                            {% if user_has_voted %}
+                                <button class="btn btn-success" disabled>
+                                    <i class="fas fa-check"></i> You Already Voted YES
+                                </button>
+                            {% else %}
+                                <form method="post" action="{% url 'petitions:vote_yes' petition.pk %}" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-primary btn-lg" id="vote-btn">
+                                        <i class="fas fa-thumbs-up"></i> Vote YES
+                                    </button>
+                                </form>
+                            {% endif %}
+                        {% else %}
+                            <div>
+                                <p class="mb-2 text-muted">You must be logged in to vote</p>
+                                <a href="{% url 'accounts.login' %}?next={{ request.path }}" class="btn btn-primary">
+                                    <i class="fas fa-sign-in-alt"></i> Log In to Vote
+                                </a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h4>Recent Votes</h4>
+                {% if petition.votes.all %}
+                <ul class="list-group">
+                    {% for vote in petition.votes.all|slice:":10" %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <span><i class="fas fa-user"></i> {{ vote.voter.username }}</span>
+                        <span>
+                            <span class="badge bg-success">YES</span>
+                            <small class="text-muted ms-2">{{ vote.voted_at|date:"M d, Y g:i A" }}</small>
+                        </span>
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p class="text-muted">No votes yet. Be the first to vote!</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Prevent double-submit on vote button
+    {% if user.is_authenticated and not user_has_voted %}
+    document.getElementById('vote-btn').addEventListener('click', function() {
+        this.disabled = true;
+        this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Voting...';
+        this.closest('form').submit();
+    });
+    {% endif %}
+</script>
+{% endblock content %}

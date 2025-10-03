@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1>Movie Petitions</h1>
+                {% if user.is_authenticated %}
+                <a href="{% url 'petitions:create' %}" class="btn btn-primary">Create Petition</a>
+                {% endif %}
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+                {% endfor %}
+            {% endif %}
+
+            {% if petitions %}
+                <div class="row">
+                    {% for petition in petitions %}
+                    <div class="col-md-12 mb-3">
+                        <div class="card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-9">
+                                        <h5 class="card-title">{{ petition.title }}</h5>
+                                        <p class="card-text"><strong>Movie:</strong> {{ petition.proposed_movie_title }}</p>
+                                        <p class="card-text text-muted">{{ petition.reason|truncatewords:30 }}</p>
+                                        <p class="text-muted mb-0">
+                                            <small>Created by {{ petition.created_by.username }} on {{ petition.created_at|date:"M d, Y" }}</small>
+                                        </p>
+                                    </div>
+                                    <div class="col-md-3 text-end d-flex flex-column align-items-end justify-content-center">
+                                        <div class="mb-2">
+                                            <span class="badge bg-success fs-5">{{ petition.yes_vote_count }} YES</span>
+                                        </div>
+                                        <a href="{% url 'petitions:detail' petition.pk %}" class="btn btn-outline-primary btn-sm">View Details</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {% if is_paginated %}
+                <nav aria-label="Petitions pagination">
+                    <ul class="pagination justify-content-center mt-4">
+                        {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page=1">First</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                        </li>
+                        {% endif %}
+
+                        <li class="page-item active">
+                            <span class="page-link">{{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                        </li>
+
+                        {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last</a>
+                        </li>
+                        {% endif %}
+                    </ul>
+                </nav>
+                {% endif %}
+
+            {% else %}
+                <div class="alert alert-info">
+                    <p class="mb-0">No petitions yet.
+                    {% if user.is_authenticated %}
+                    Be the first to <a href="{% url 'petitions:create' %}">create a petition</a>!
+                    {% else %}
+                    <a href="{% url 'accounts.login' %}">Log in</a> to create one!
+                    {% endif %}
+                    </p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock content %}

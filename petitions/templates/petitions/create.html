@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Create New Petition</h2>
+                </div>
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                            {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="id_title" class="form-label">Petition Title *</label>
+                            {{ form.title }}
+                            {% if form.title.errors %}
+                                <div class="text-danger">{{ form.title.errors }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">A short, catchy title for your petition</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_proposed_movie_title" class="form-label">Movie Title *</label>
+                            {{ form.proposed_movie_title }}
+                            {% if form.proposed_movie_title.errors %}
+                                <div class="text-danger">{{ form.proposed_movie_title.errors }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">The title of the movie you want added</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="id_reason" class="form-label">Reason *</label>
+                            {{ form.reason }}
+                            {% if form.reason.errors %}
+                                <div class="text-danger">{{ form.reason.errors }}</div>
+                            {% endif %}
+                            <small class="form-text text-muted">Explain why this movie should be included in the store</small>
+                        </div>
+
+                        <div class="d-flex justify-content-between">
+                            <a href="{% url 'petitions:list' %}" class="btn btn-secondary">Cancel</a>
+                            <button type="submit" class="btn btn-primary">Create Petition</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    #id_title, #id_proposed_movie_title {
+        width: 100%;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #212529;
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+    }
+    #id_reason {
+        width: 100%;
+        min-height: 120px;
+        padding: 0.375rem 0.75rem;
+        font-size: 1rem;
+        line-height: 1.5;
+        color: #212529;
+        background-color: #fff;
+        border: 1px solid #ced4da;
+        border-radius: 0.25rem;
+    }
+</style>
+{% endblock content %}
